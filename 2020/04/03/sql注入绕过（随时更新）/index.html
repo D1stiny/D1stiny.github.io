@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>sql注入绕过（随时更新） | D1stiny</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  <meta name="description" content="sql注入绕过（随时更新）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入绕过（随时更新）">
+<meta property="og:url" content="2020/04/03/sql%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%EF%BC%88%E9%9A%8F%E6%97%B6%E6%9B%B4%E6%96%B0%EF%BC%89/index.html">
+<meta property="og:site_name" content="D1stiny">
+<meta property="og:description" content="sql注入绕过（随时更新）">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E4%B8%80.png">
+<meta property="og:image" content="/sql/2.png">
+<meta property="og:image" content="/sql/3.png">
+<meta property="og:image" content="/sql/4.png">
+<meta property="og:image" content="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%871.png">
+<meta property="og:image" content="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%872.png">
+<meta property="og:image" content="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%873.png">
+<meta property="article:published_time" content="2020-04-03T12:30:15.073Z">
+<meta property="article:modified_time" content="2020-03-23T10:37:14.002Z">
+<meta property="article:author" content="d1stiny">
+<meta property="article:tag" content="sql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E4%B8%80.png">
+  
+    <link rel="alternate" href="/atom.xml" title="D1stiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/default-avatar.jpg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/highlight.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="fullpage" class="mobile-nav-right">
+    
+      <div id="wrapper" title="背景图片来自网络">
+    
+    
+      <header id="header">
+  <div id="nav-toggle" class="nav-toggle"></div>
+  <div class="head-box global-width">
+    <nav class="nav-box nav-right">
+      
+        <a class="nav-item" href="/" title
+        
+        >首页</a>
+      
+        <a class="nav-item" href="/archives" title
+        
+        >归档</a>
+      
+    </nav>
+  </div>
+</header>
+      <div id="middlecontent" title class="global-width sidebar-right">
+        <section id="main"><article id="post-sql注入绕过（随时更新）" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      sql注入绕过（随时更新）
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/04/03/sql注入绕过（随时更新）/" target="_blank" rel="noopener" class="article-date">
+  <time datetime="2020-04-03T12:30:15.073Z" itemprop="datePublished">2020-04-03</time>
+</a>
+    
+    
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="tags/sql/" target="_blank" rel="tag noopener">sql</a></li></ul>
+
+  </div>
+  
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <p>注入绕过有很多很多种，原理基本类似，在我看来有函数过滤和字符过滤两种。（因为比较菜，所以目前只讲一下字符过滤好了）</p>
+<p>这里我选择的是根据实例进行解释（更适合小白）（会在最后进行总结，把各种方式都列出来的）</p>
+<h2 id="0x01-这里跟一下隔壁的风"><a href="#0x01-这里跟一下隔壁的风" target="_blank" rel="noopener" class="headerlink" title="0x01(这里跟一下隔壁的风)"></a>0x01(这里跟一下隔壁的风)</h2><p><em>字符过滤，顾名思义，就是把可能在注入中出现一些字符过滤掉以此来防止注入。</em></p>
+<p>那么问题来了，怎么看他是把哪种字符给过滤了呢？</p>
+<ul>
+<li>在之前，我以为是通过报错才进行判断，接触注入绕过以后，发现不现实，因为只会告诉你在哪个位置有错却不会告诉你具体的东西，那么究竟该如何判断呢？</li>
+</ul>
+<p>方法很简单，构建一个逻辑上一定正确的语句，然后将将你怀疑的字符构造进去进行查询，学名叫做<strong>异或注入</strong></p>
+<p><strong>异或注入：两个条件相同（同真或同假）即为假，异或符号未^,两个条件就是1和后面的语句。在这里我们举个例子。</strong></p>
+<p>1.这里的%27，%23都是url编码，这里是没有错误的</p>
+<p><img src="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E4%B8%80.png" alt="注入绕过一"></p>
+<p>2.这里就出现了错误，再结合一开始的文字分析，是不是就明白了。这是id后面的内容首先要和^后面的内容进行异或，因为异或以后id变为0，数据库查找不到信息，所以产生错误。</p>
+<p><strong>总而言之就是括号里得到内容如果为真则会产生错误，为假则会正常运行，我们可以利用这个进行判断哪些字符被过滤掉了。</strong></p>
+<p><img src="/sql/2.png" alt="2"></p>
+<p>3.这样判断过滤，<strong>当然不排除过滤了大于号，单引号，空格，括号，注释符等等，那些之后再讲</strong></p>
+<p><img src="/sql/3.png" alt="3"></p>
+<p>4.接下来就是绕过方式，采取在union中再加一个union，即uniunionin这种（学名<strong>双写关键字绕过</strong>），再过滤掉其中的union后恰好剩下一个union（当然，不排除那种丧心病狂的开发人员<strong>比如隔壁</strong>进行连续过滤，即发现过滤内容的话，就把过滤完把数据传回一开始再过滤，这样的话就不好用了），如图所示</p>
+<p>其实还可以利用大小写，16进制，内联注释等等方法绕过，改天细讲。</p>
+<p><img src="/sql/4.png" alt="4"></p>
+<h2 id="0x02"><a href="#0x02" target="_blank" rel="noopener" class="headerlink" title="0x02"></a>0x02</h2><ul>
+<li>看代码，如果发现有and,or,sleep，直接停止，然后再把空格删掉。（这里是最开始带着错误理解写的，因为题目简单所以直接给了源码，现实中是不存在的）</li>
+</ul>
+<p><img src="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%871.png" alt="注入绕过1"></p>
+<ul>
+<li>在这里我们先用老方法试一下，发现不行</li>
+</ul>
+<p><img src="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%872.png" alt="注入绕过2"></p>
+<ul>
+<li>要注意顺序，根据反馈的日志信息进行修改，这里是先把空格替换成/**/然后再替换and，or，sleep</li>
+</ul>
+<p><img src="/sql/%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%873.png" alt="注入绕过3"></p>
+<h2 id="0x03"><a href="#0x03" target="_blank" rel="noopener" class="headerlink" title="0x03"></a>0x03</h2><p>当然以上都是很简单的，之后会有大量的补充。</p>
+<h1 id="sql注入绕过方式总结："><a href="#sql注入绕过方式总结：" target="_blank" rel="noopener" class="headerlink" title="sql注入绕过方式总结："></a>sql注入绕过方式总结：</h1><h2 id="0x01，单引号绕过（有些人说无解，但那只针对于小白）"><a href="#0x01，单引号绕过（有些人说无解，但那只针对于小白）" target="_blank" rel="noopener" class="headerlink" title="0x01，单引号绕过（有些人说无解，但那只针对于小白）"></a>0x01，单引号绕过（有些人说无解，但那只针对于小白）</h2><p>绝大部分都会有单引号过滤，当然过滤掉单引号也并不能防止注入</p>
+<p>单引号过滤原理：大多数的单引号过滤是通过把单引号转换成其他字符</p>
+<h6 id="1-把单引号转化为编码形式"><a href="#1-把单引号转化为编码形式" target="_blank" rel="noopener" class="headerlink" title="1.把单引号转化为编码形式"></a>1.把单引号转化为编码形式</h6><p>虽然只要是正常人就会对这种编码进行过滤，但好歹也是一种方法，万一碰上傻子呢。</p>
+<h6 id="2-进行赋值（代码实例来源于网络）"><a href="#2-进行赋值（代码实例来源于网络）" target="_blank" rel="noopener" class="headerlink" title="2.进行赋值（代码实例来源于网络）"></a>2.进行赋值（代码实例来源于网络）</h6><p><code>代码示例1：</code></p>
+<p><code>http://www./show.asp?id=1;exec master.dbo.xp_cmdshell &#39;net user angel pass /add&#39;;--</code> </p>
+<p><code>代码示例2：</code></p>
+<p><code>http://www./show.asp?id=1;declare%20@a%20sysname%20select%20@a=</code></p>
+<p><code>0x6e006500740020007500730065007200200061006e0067</code></p>
+<p><code>0065006c002000700061007300730020002f006100640064</code></p>
+<p><code>00%20exec%20master.dbo.xp_cmdshell%20@a;--</code></p>
+<p>是不是跟上面的那句有很大区别？可是效果完全是一样的，其实这些都是SQL语句。<br>0x6e006500740020007500730065007200200061006e00670065006c002000700061007300730020002f00610064006400</p>
+<p>这句是“net user angel pass /add”的16进制格式。<br>先声明一个变量a，然后把指令赋值给a，然后调用变量a最终执行我们输入的命令。变量a可以是任何命令。比如代码示例：</p>
+<p><code>declare @a sysname</code><br><code>select @a=</code><br><code>exec master.dbo.xp_cmdshell @a</code></p>
+<p><u>当然不排除有的丧心病狂的开发者对输入数据进行限制，只能输入特定字符或数字类型的数据（这就太恶心了，虽然是事实）</u></p>
+<h6 id="3-避免使用单引号，使用函数进行代替（这才是大神们常用的方式）"><a href="#3-避免使用单引号，使用函数进行代替（这才是大神们常用的方式）" target="_blank" rel="noopener" class="headerlink" title="3.避免使用单引号，使用函数进行代替（这才是大神们常用的方式）"></a>3.避免使用单引号，使用函数进行代替（这才是大神们常用的方式）</h6><p>简单的如where xtype=’U’，字符U对应的ASCII码是85，所以可以用where xtype=char(85)代替；如果字符是中文的，比如where name=’用户’，可以用where name=nchar(29992)+nchar(25143)代替。</p>
+<p><strong>复杂的语句则可以用函数命令进行替换，当然，有的函数也会被过滤</strong></p>
+<p>因为我现在比较菜，所以等接触到那种程度在进行补充吧。</p>
+<h6 id="4-转义字符-代码来源于网络"><a href="#4-转义字符-代码来源于网络" target="_blank" rel="noopener" class="headerlink" title="4.转义字符(代码来源于网络)"></a>4.转义字符(代码来源于网络)</h6><p><code>id=replace(trim(request(&quot;id&quot;)),&quot;&#39;&quot;,&quot;&quot;)</code></p>
+<p>或者</p>
+<p><code>name=name.replaceAll(&quot;&#39;&quot;, &quot;xxx&quot;);</code></p>
+<p><code>password=password.replaceAll(&quot;&#39;&quot;, &quot;xxx&quot;);</code></p>
+<p><code>String sql=&quot;select * from user_table where username=&#39;&quot;+name+&quot;&#39; and password=&#39;&quot;+password+&quot;&#39;&quot;;</code></p>
+<p>在替换或截掉单引号之后在加上单引号却没有其他限制。</p>
+<p>如果是这样写的话，可以通过转义字符（ \ ‘ ），hex编码，宽字节等方法绕过（具体另讲）</p>
+<h3 id="0x02-1"><a href="#0x02-1" target="_blank" rel="noopener" class="headerlink" title="0x02"></a>0x02</h3><p>未完待续。。。</p>
+
+      
+    </div>
+    
+      <footer class="article-footer">
+        完
+      </footer>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  <div class="article-nav-block">
+    
+      <a href="2020/04/03/sql入门/" target="_blank" rel="noopener" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption"></strong>
+        <div class="article-nav-title">
+          
+            sql入门
+          
+        </div>
+      </a>
+    
+  </div>
+  <div class="article-nav-block">
+    
+  </div>
+</nav>
+
+    <link rel="stylesheet" href="/css/gitment.css"> 
+<script src="/js/gitment.js"></script>
+
+<div id="gitmentContainer"></div>
+
+<script>
+var gitment = new Gitment({
+  owner: 'D1stiny',
+  id: "sql注入绕过（随时更新）",
+  repo: 'D1stiny.github.io',
+  oauth: {
+    client_id: 'f6733250ed6417fd609e',
+    client_secret: 'e54b9c1b95baf3ee5a8b17f8b4a43d5748b74e5e',
+  },
+})
+gitment.render('gitmentContainer')
+</script>
+
+  
+  
+</article>
+</section>
+        <aside id="sidebar">
+  
+    <div class="widget-box">
+  <div class="avatar-box">
+    <img class="avatar" src="/images/default-avatar.jpg" title="头像来自网络"></img>
+    <h3 class="avatar-name">
+      
+        D1stiny
+      
+    </h3>
+    <p class="avatar-slogan">
+      我心中有猛虎，细嗅蔷薇
+    </p>
+  </div>
+</div>
+
+
+  
+    
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="tags/DVWA/" target="_blank" rel="tag noopener">DVWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/blog/" target="_blank" rel="tag noopener">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/sql/" target="_blank" rel="tag noopener">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/上传漏洞/" target="_blank" rel="tag noopener">上传漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/日常/" target="_blank" rel="tag noopener">日常</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="tags/DVWA/" target="_blank" rel="noopener" style="font-size: 10px;">DVWA</a> <a href="tags/blog/" target="_blank" rel="noopener" style="font-size: 10px;">blog</a> <a href="tags/sql/" target="_blank" rel="noopener" style="font-size: 20px;">sql</a> <a href="tags/上传漏洞/" target="_blank" rel="noopener" style="font-size: 10px;">上传漏洞</a> <a href="tags/日常/" target="_blank" rel="noopener" style="font-size: 10px;">日常</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="archives/2020/04/" target="_blank" rel="noopener">April 2020</a></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="2020/04/03/sqlmap使用/" target="_blank" rel="noopener">sqlmap使用</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/postgersql的注入/" target="_blank" rel="noopener">postgersql的注入</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/order by排序注入/" target="_blank" rel="noopener">order by排序注入</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/hello-world/" target="_blank" rel="noopener">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/cookie的注入/" target="_blank" rel="noopener">cookie的注入</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+      <div class="widget-box">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      
+        <a style="display: block;" href="https://leviolet.github.io/" title target='_blank'
+        >大佬(反正比我强)leviolet的blog</a>
+      
+        <a style="display: block;" href="https://blog.csdn.net/m0_46230316" title target='_blank'
+        >我的CSDN博客</a>
+      
+        <a style="display: block;" href="https://www.rayi.vip" title target='_blank'
+        >rayi师傅的博客</a>
+      
+        <a style="display: block;" href="https://www.summern.club" title target='_blank'
+        >summern师傅的博客</a>
+      
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  <div class="foot-box global-width">
+    &copy; 2020 d1stiny &nbsp;&nbsp;
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    &nbsp;|&nbsp;主题 <a href="https://github.com/yiluyanxia/hexo-theme-antiquity" target="_blank" rel="noopener">antiquity</a>
+    <br>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">不蒜子告之   阁下是第<span id="busuanzi_value_site_pv"></span>个访客</span>
+  </div>
+</footer>
+      <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+if (!window.jQuery) {
+var script = document.createElement('script');
+script.src = "/js/jquery-2.0.3.min.js";
+document.body.write(script);
+}
+</script>
+
+  
+<link rel="stylesheet" href="fancybox/jquery.fancybox.css">
+
+  
+<script src="fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="js/script.js"></script>
+
+
+
+
+    </div>
+    <nav id="mobile-nav" class="mobile-nav-box">
+  <div class="mobile-nav-img mobile-nav-top"></div>
+  
+    <a href="/" target="_blank" rel="noopener" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" target="_blank" rel="noopener" class="mobile-nav-link">归档</a>
+  
+  <div class="mobile-nav-img  mobile-nav-bottom"></div>
+</nav>    
+  </div>
+</body>
+</html>

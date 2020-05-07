@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>写博文中遇到的问题 | D1stiny</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  <meta name="description" content="写博文中遇到的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="写博文中遇到的问题">
+<meta property="og:url" content="2020/04/03/%E5%86%99%E5%8D%9A%E6%96%87%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="D1stiny">
+<meta property="og:description" content="写博文中遇到的问题">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="/%E5%85%B7%E4%BD%93%E5%81%9A%E6%B3%95.png">
+<meta property="og:image" content="/%E5%8D%9A%E5%AE%A2%E9%97%AE%E9%A2%98/%E8%B5%84%E6%96%99.jpg">
+<meta property="article:published_time" content="2020-04-03T13:47:03.097Z">
+<meta property="article:modified_time" content="2020-03-22T07:42:56.946Z">
+<meta property="article:author" content="d1stiny">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/%E5%85%B7%E4%BD%93%E5%81%9A%E6%B3%95.png">
+  
+    <link rel="alternate" href="/atom.xml" title="D1stiny" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/default-avatar.jpg">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/highlight.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="fullpage" class="mobile-nav-right">
+    
+      <div id="wrapper" title="背景图片来自网络">
+    
+    
+      <header id="header">
+  <div id="nav-toggle" class="nav-toggle"></div>
+  <div class="head-box global-width">
+    <nav class="nav-box nav-right">
+      
+        <a class="nav-item" href="/" title
+        
+        >首页</a>
+      
+        <a class="nav-item" href="/archives" title
+        
+        >归档</a>
+      
+    </nav>
+  </div>
+</header>
+      <div id="middlecontent" title class="global-width sidebar-right">
+        <section id="main"><article id="post-写博文中遇到的问题" class="article global-container article-type-post" itemscope itemprop="blogPost">
+  
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      写博文中遇到的问题
+    </h1>
+  
+
+    </header>
+  
+  <div class="article-meta">
+    <a href="/2020/04/03/写博文中遇到的问题/" target="_blank" rel="noopener" class="article-date">
+  <time datetime="2020-04-03T13:47:03.097Z" itemprop="datePublished">2020-04-03</time>
+</a>
+    
+    
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="tags/blog/" target="_blank" rel="tag noopener">blog</a></li></ul>
+
+  </div>
+  
+    <span id="busuanzi_container_page_pv">
+      本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  
+
+  <div class="article-inner">
+    
+    <div class="article-content article-content-cloud" itemprop="articleBody">
+      
+        <p><del>世界总是那么的不美好，玄学问题散布在各处</del></p>
+<h3 id="问题一："><a href="#问题一：" target="_blank" rel="noopener" class="headerlink" title="问题一："></a>问题一：</h3><p>YAMLException: end of the stream or a document separator is expected at line x, column y: </p>
+<ul>
+<li><p>网上的解决方法：出现这种情况，一般都是缺少空格，在<code>:</code>冒号之后要有空格！检查x行y列附近的冒号，其之后是否跟了空格。</p>
+</li>
+<li><p>然而并没有什么卵用</p>
+</li>
+<li><p>在经过leviolet的指点后，知道了根源问题： </p>
+</li>
+<li><p>除了要注意空格之外，三条短线也不能少,如下所示</p>
+<p><img src="/%E5%85%B7%E4%BD%93%E5%81%9A%E6%B3%95.png" alt="具体做法"></p>
+</li>
+</ul>
+<h3 id="问题二："><a href="#问题二：" target="_blank" rel="noopener" class="headerlink" title="问题二："></a>问题二：</h3><p>  不显示图片： 不论图片是写成绝对路径还是github网址的形式都无法显示（之前还好好的来着），右键复制图片网址却可以显示。</p>
+<p>  解决方法： 本来网上的是   /xxxxx.png或者xxxx.github.io/xxxxx/xxxx.png，后来经过指点，得到了以下资料。</p>
+<p>  <img src="/%E5%8D%9A%E5%AE%A2%E9%97%AE%E9%A2%98/%E8%B5%84%E6%96%99.jpg" alt="资料"></p>
+<ul>
+<li><p>虽然不知道为什么之前的图片“/”之前莫名多了两个“..”，所以导致无法显示，但是由于新版的hexo的问题， /xxxxx.png的格式是正确的，但是在md文件中图片无法正常显示，在网页中是可以显示的，所以不要慌，不是你的问题。</p>
+</li>
+<li><p>在经过苦思冥想之后，似乎找到了原因，因为之前gitment功能无法正常使用，所以修改了gitment.ejs，改回去之后就好了，事实告诉我们不要随便改，谁知道作者的这条语句有什么其他用法。。。</p>
+</li>
+</ul>
+<h3 id="问题三："><a href="#问题三：" target="_blank" rel="noopener" class="headerlink" title="问题三："></a>问题三：</h3><p>[object ProgressEvent]问题： </p>
+<p>这是一个神奇的世界，就在昨天，我因为这个问题上网找答案，找到了</p>
+<div class="highlight-box"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PLAIN"><figure class="iseeu highlight /plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 将 gitment.js中的 </span><br><span class="line">_utils.http.post(&#39;https:&#x2F;&#x2F;gh-oauth.imsun.net&#39;, &#123;&#125;)</span><br><span class="line">&#x2F;&#x2F; 改为</span><br><span class="line">_utils.http.post(&#39;https:&#x2F;&#x2F;github.com&#x2F;login&#x2F;oauth&#x2F;access_token&#39;, &#123;&#125;)</span><br></pre></td></tr></table></figure></div>
+
+<p>然而今天又不好用了，然后我就抱着试一试的态度又改了回去，结果。。。又好了。。。</p>
+<p><strong>这真的是一个看脸的时代。。。</strong></p>
+<p>根据我的多次实验，他隔一天就好用，我也不知道为啥</p>
+<h3 id="问题四："><a href="#问题四：" target="_blank" rel="noopener" class="headerlink" title="问题四："></a>问题四：</h3><p>博客中直接显示![orderby排序注入步骤一](/sql/order by排序注入步骤一.png)</p>
+<p>而不显示图片：</p>
+<p>这是因为图片的名字中中不能有空格，order by改为orderby即可。</p>
+
+      
+    </div>
+    
+      <footer class="article-footer">
+        完
+      </footer>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  <div class="article-nav-block">
+    
+      <a href="2020/04/03/access的注入/" target="_blank" rel="noopener" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption"></strong>
+        <div class="article-nav-title">
+          
+            access的注入
+          
+        </div>
+      </a>
+    
+  </div>
+  <div class="article-nav-block">
+    
+      <a href="2020/04/03/如何确定有token随机值的注入/" target="_blank" rel="noopener" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">如何处理有token随机值的注入</div>
+        <strong class="article-nav-caption"></strong>
+      </a>
+    
+  </div>
+</nav>
+
+    <link rel="stylesheet" href="/css/gitment.css"> 
+<script src="/js/gitment.js"></script>
+
+<div id="gitmentContainer"></div>
+
+<script>
+var gitment = new Gitment({
+  owner: 'D1stiny',
+  id: "写博文中遇到的问题",
+  repo: 'D1stiny.github.io',
+  oauth: {
+    client_id: 'f6733250ed6417fd609e',
+    client_secret: 'e54b9c1b95baf3ee5a8b17f8b4a43d5748b74e5e',
+  },
+})
+gitment.render('gitmentContainer')
+</script>
+
+  
+  
+</article>
+</section>
+        <aside id="sidebar">
+  
+    <div class="widget-box">
+  <div class="avatar-box">
+    <img class="avatar" src="/images/default-avatar.jpg" title="头像来自网络"></img>
+    <h3 class="avatar-name">
+      
+        D1stiny
+      
+    </h3>
+    <p class="avatar-slogan">
+      我心中有猛虎，细嗅蔷薇
+    </p>
+  </div>
+</div>
+
+
+  
+    
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="tags/DVWA/" target="_blank" rel="tag noopener">DVWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/blog/" target="_blank" rel="tag noopener">blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/sql/" target="_blank" rel="tag noopener">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/上传漏洞/" target="_blank" rel="tag noopener">上传漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="tags/日常/" target="_blank" rel="tag noopener">日常</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="tags/DVWA/" target="_blank" rel="noopener" style="font-size: 10px;">DVWA</a> <a href="tags/blog/" target="_blank" rel="noopener" style="font-size: 10px;">blog</a> <a href="tags/sql/" target="_blank" rel="noopener" style="font-size: 20px;">sql</a> <a href="tags/上传漏洞/" target="_blank" rel="noopener" style="font-size: 10px;">上传漏洞</a> <a href="tags/日常/" target="_blank" rel="noopener" style="font-size: 10px;">日常</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="archives/2020/04/" target="_blank" rel="noopener">April 2020</a></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-box">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="2020/04/03/sqlmap使用/" target="_blank" rel="noopener">sqlmap使用</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/postgersql的注入/" target="_blank" rel="noopener">postgersql的注入</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/order by排序注入/" target="_blank" rel="noopener">order by排序注入</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/hello-world/" target="_blank" rel="noopener">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="2020/04/03/cookie的注入/" target="_blank" rel="noopener">cookie的注入</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+      <div class="widget-box">
+    <h3 class="widget-title">友链</h3>
+    <div class="widget">
+      
+        <a style="display: block;" href="https://leviolet.github.io/" title target='_blank'
+        >大佬(反正比我强)leviolet的blog</a>
+      
+        <a style="display: block;" href="https://blog.csdn.net/m0_46230316" title target='_blank'
+        >我的CSDN博客</a>
+      
+        <a style="display: block;" href="https://www.rayi.vip" title target='_blank'
+        >rayi师傅的博客</a>
+      
+        <a style="display: block;" href="https://www.summern.club" title target='_blank'
+        >summern师傅的博客</a>
+      
+    </div>
+  </div>
+
+  
+</aside>
+      </div>
+      <footer id="footer">
+  <div class="foot-box global-width">
+    &copy; 2020 d1stiny &nbsp;&nbsp;
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    &nbsp;|&nbsp;主题 <a href="https://github.com/yiluyanxia/hexo-theme-antiquity" target="_blank" rel="noopener">antiquity</a>
+    <br>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">不蒜子告之   阁下是第<span id="busuanzi_value_site_pv"></span>个访客</span>
+  </div>
+</footer>
+      <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+if (!window.jQuery) {
+var script = document.createElement('script');
+script.src = "/js/jquery-2.0.3.min.js";
+document.body.write(script);
+}
+</script>
+
+  
+<link rel="stylesheet" href="fancybox/jquery.fancybox.css">
+
+  
+<script src="fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="js/script.js"></script>
+
+
+
+
+    </div>
+    <nav id="mobile-nav" class="mobile-nav-box">
+  <div class="mobile-nav-img mobile-nav-top"></div>
+  
+    <a href="/" target="_blank" rel="noopener" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" target="_blank" rel="noopener" class="mobile-nav-link">归档</a>
+  
+  <div class="mobile-nav-img  mobile-nav-bottom"></div>
+</nav>    
+  </div>
+</body>
+</html>
